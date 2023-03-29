@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
+    implementation 'org.eclipse.jetty:jetty-server:9.3.9.M0'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/websocket-servlet
+    implementation 'org.eclipse.jetty.websocket:websocket-servlet:9.3.9.M0'
+
+    // https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/websocket-server
+    implementation 'org.eclipse.jetty.websocket:websocket-server:9.3.9.M0'
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+}
+
+task runWithExec(type: Exec) {
+    dependsOn build
+    group = "Execution"
+    description = "Run the main class with ExecTask"
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.dev.Daemon"
+}
+
+test {
+    useJUnitPlatform()
+}
