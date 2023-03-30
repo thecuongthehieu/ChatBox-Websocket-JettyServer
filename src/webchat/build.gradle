@@ -28,11 +28,42 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.dev.Daemon'
+        )
+    }
+}
+
+def CLASS_PATH = sourceSets.main.runtimeClasspath.getAsPath()
 task runWithExec(type: Exec) {
     dependsOn build
     group = "Execution"
-    description = "Run the main class with ExecTask"
-    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.dev.Daemon"
+    description = "Run the main class with Exec Task"
+    commandLine "java", "-classpath", CLASS_PATH, "-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005", "com.dev.Daemon"
+}
+
+task printSourceSetInformation() {
+
+    doLast {
+        println(sourceSets);
+
+        sourceSets.each { srcSet ->
+            println "[" + srcSet.name + "]"
+            print "-->Source directories: " + srcSet.allJava.srcDirs + "\n"
+            print "-->Output directories: " + srcSet.output.classesDirs.files + "\n"
+            print "-->Compile classpath:\n"
+            srcSet.compileClasspath.files.each {
+                print "  " + it.path + "\n"
+            }
+            print "-->Runtime classpath:\n"
+            srcSet.runtimeClasspath.files.each {
+                print "  " + it.path + "\n"
+            }
+            println ""
+        }
+    }
 }
 
 test {

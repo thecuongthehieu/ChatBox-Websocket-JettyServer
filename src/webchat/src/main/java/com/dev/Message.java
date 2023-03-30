@@ -3,11 +3,26 @@ package com.dev;
 import java.time.LocalDateTime;
 
 public class Message {
-	public static final String SET_USERNAME_ACTION = "setUserName";
-	public static final String SEND_MESSAGE_ACTION = "sendMessage";
-	public static final String JOIN_ACTION = "join";
-	public static final String NEW_MESSAGE_ACTION = "newMessage";
-	public static final String LEFT_ACTION = "left";
+	public static enum ClientMessageAction {
+		SET_USERNAME("setUserName"),
+		SEND_MESSAGE("sendMessage");
+		public final String value;
+
+		private ClientMessageAction(String value) {
+			this.value = value;
+		}
+	}
+
+	public static enum ServerMessageAction {
+		JOIN("join"),
+		NEW_MESSAGE("newMessage"),
+		LEFT("left");
+		public final String value;
+
+		private ServerMessageAction(String value) {
+			this.value = value;
+		}
+	}
 
 	private String action;
 	private String value;

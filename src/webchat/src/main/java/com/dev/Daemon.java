@@ -8,22 +8,27 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 public class Daemon {
+	private static final int SERVER_PORT = 6873;
+
 	public static void main(String[] args) throws Exception {
-		Server server = new Server(9999);
+		Server server = new Server(SERVER_PORT);
 
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.addServlet(new ServletHolder(new ChatWebSocketServlet()), "/chat");
 
+		Class cl = Class.forName("com.dev.Daemon");
+		String indexFilePath = cl.getResource("/index.html").getPath();
+
 		ResourceHandler resourceHandler = new ResourceHandler();
 		resourceHandler.setDirectoriesListed(true);
-		resourceHandler.setResourceBase("src/main/resources");
+		resourceHandler.setResourceBase(indexFilePath);
 
 		HandlerList handlerList = new HandlerList();
 		handlerList.setHandlers(new Handler[] {resourceHandler, context});
 		server.setHandler(handlerList);
 
 		server.start();
-		System.out.println("Started servlet");
+		System.out.println("Started Server");
 		server.join();
 	}
 }

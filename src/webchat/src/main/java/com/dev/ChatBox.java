@@ -14,25 +14,25 @@ public class ChatBox {
 		}
 		newUserWebSocket.setUserName(newUsername);
 		this.userNameToWebSocketMap.put(newUsername, newUserWebSocket);
-		Message addUserMessageObj = new Message(Message.JOIN_ACTION, newUsername, String.valueOf(this.userNameToWebSocketMap.size()));
-		broadCastMessage(newUserWebSocket, addUserMessageObj);
+		Message addUserMessageObj = new Message(Message.ServerMessageAction.JOIN.value, newUsername, String.valueOf(this.userNameToWebSocketMap.size()));
+		broadCastMessage(addUserMessageObj);
 	}
 
 	public void removeUser(ChatWebSocket leftUserWebSocket) {
 		String leftUserName = leftUserWebSocket.getUsername();
 		if (leftUserName != null) {
 			userNameToWebSocketMap.remove(leftUserName);
-			Message leftUserMessageObj = new Message(Message.LEFT_ACTION, leftUserName, String.valueOf(this.userNameToWebSocketMap.size()));
-			broadCastMessage(leftUserWebSocket, leftUserMessageObj);
+			Message removeUserMessageObj = new Message(Message.ServerMessageAction.LEFT.value, leftUserName, String.valueOf(this.userNameToWebSocketMap.size()));
+			broadCastMessage(removeUserMessageObj);
 		}
 	}
 
-	public void sendMessage(ChatWebSocket sender, String messageValue) {
-		Message newMesseageObj = new Message(Message.NEW_MESSAGE_ACTION, sender.getUsername(), messageValue);
-		broadCastMessage(sender, newMesseageObj);
+	public void displayMessage(ChatWebSocket sender, String messageText) {
+		Message displayedMessageObj = new Message(Message.ServerMessageAction.NEW_MESSAGE.value, sender.getUsername(), messageText);
+		broadCastMessage(displayedMessageObj);
 	}
 
-	public void broadCastMessage(ChatWebSocket sender, Message messageObj) {
+	public void broadCastMessage(Message messageObj) {
 		for (ChatWebSocket receiverWebSocket : this.userNameToWebSocketMap.values()) {
 			if (receiverWebSocket.isConnected()) {
 				try {

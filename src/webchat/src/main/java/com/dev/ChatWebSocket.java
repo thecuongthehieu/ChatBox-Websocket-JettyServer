@@ -3,7 +3,10 @@ package com.dev;
 import com.google.gson.Gson;
 
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-// This object represents a session (socket connection)
+
+/**
+ * This object represents a session (a socket connection)
+ */
 public class ChatWebSocket extends WebSocketAdapter {
 	private String username = null; // unique name
 
@@ -15,12 +18,12 @@ public class ChatWebSocket extends WebSocketAdapter {
 	@Override
 	public void onWebSocketText(String message) {
 		Message messageObj = new Gson().fromJson(message, Message.class);
-		if ("setUserName".equals(messageObj.getAction())) {
+		if (Message.ClientMessageAction.SET_USERNAME.value.equals(messageObj.getAction())) {
 			String newUsername = messageObj.getValue();
 			ChatWebSocketServlet.chatBox.addUser(newUsername, this);
-		} else if ("sendMessage".equals(messageObj.getAction())) {
+		} else if (Message.ClientMessageAction.SEND_MESSAGE.value.equals(messageObj.getAction())) {
 			String typedText = messageObj.getValue();
-			ChatWebSocketServlet.chatBox.sendMessage(this, typedText);
+			ChatWebSocketServlet.chatBox.displayMessage(this, typedText);
 		}
 	}
 
