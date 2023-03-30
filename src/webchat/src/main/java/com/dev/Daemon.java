@@ -6,8 +6,10 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.apache.log4j.Logger;
 
 public class Daemon {
+	private static final Logger LOGGER = Logger.getLogger(Daemon.class);
 	private static final int SERVER_PORT = 6873;
 
 	public static void main(String[] args) throws Exception {
@@ -28,7 +30,13 @@ public class Daemon {
 		server.setHandler(handlerList);
 
 		server.start();
-		System.out.println("Started Server");
+
+		LOGGER.trace("Started Server");
+		LOGGER.debug("Started Server");
+		LOGGER.info("Started Server");
+		LOGGER.warn("Started Server");
+		LOGGER.fatal("Started Server");
+
 		server.join();
 	}
 }
