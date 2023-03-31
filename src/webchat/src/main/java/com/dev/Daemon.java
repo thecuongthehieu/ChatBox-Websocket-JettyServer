@@ -8,6 +8,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+
 public class Daemon {
 	private static final Logger LOGGER = Logger.getLogger(Daemon.class);
 	private static final int SERVER_PORT = 6873;
@@ -20,10 +22,12 @@ public class Daemon {
 
 		Class cl = Class.forName("com.dev.Daemon");
 		String indexFilePath = cl.getResource("/index.html").getPath();
+		File indexFile = new File(indexFilePath);
+		String resourceDirPath = indexFile.getParentFile().getPath();
 
 		ResourceHandler resourceHandler = new ResourceHandler();
 		resourceHandler.setDirectoriesListed(true);
-		resourceHandler.setResourceBase(indexFilePath);
+		resourceHandler.setResourceBase(resourceDirPath);
 
 		HandlerList handlerList = new HandlerList();
 		handlerList.setHandlers(new Handler[] {resourceHandler, context});
