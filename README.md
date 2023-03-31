@@ -1,4 +1,4 @@
-# ChatBox-Websocket-JettyServer
+# ChatBox Websocket JettyServer
 
 # Usage
   `$ ./bin/run.sh`
