@@ -8,8 +8,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-
 public class Daemon {
 	private static final Logger LOGGER = Logger.getLogger(Daemon.class);
 	private static final int SERVER_PORT = 6873;
@@ -21,9 +19,7 @@ public class Daemon {
 		context.addServlet(new ServletHolder(new ChatWebSocketServlet()), "/chat");
 
 		Class cl = Class.forName("com.dev.Daemon");
-		String indexFilePath = cl.getResource("/index.html").getPath();
-		File indexFile = new File(indexFilePath);
-		String resourceDirPath = indexFile.getParentFile().getPath();
+		String resourceDirPath = cl.getResource("/webapp").toString();
 
 		ResourceHandler resourceHandler = new ResourceHandler();
 		resourceHandler.setDirectoriesListed(true);
