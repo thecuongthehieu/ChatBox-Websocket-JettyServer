@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./gradlew :src:webchat:runWithExec
+./gradlew src:webchat:clean :src:webchat:runWithExec

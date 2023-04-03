@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'org.example'
-version 'unspecified'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -60,4 +60,16 @@ task printSourceSetInformation() {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    archiveBaseName = 'webchat'
+    archiveVersion =  "$version"
+    manifest {
+        attributes 'Main-Class' : 'com.dev.Daemon'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy "exclude"
 }
