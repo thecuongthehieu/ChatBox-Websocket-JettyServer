@@ -1,5 +1,5 @@
 #!/bin/sh
 
-export IMAGE_NAME="ccr.itim.vn/search/new-spellchecker"
-export IMAGE_TAG="v2.0.`date +%s`"
+export IMAGE_NAME="webchat"
+export IMAGE_TAG="v1.0" # Note: should be consistent with the version of JAR file
 
