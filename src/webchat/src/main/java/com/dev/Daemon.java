@@ -42,5 +42,6 @@ public class Daemon {
 		LOGGER.fatal("Started Server");
 
 		server.join();
+//		server.stop();
 	}
 }

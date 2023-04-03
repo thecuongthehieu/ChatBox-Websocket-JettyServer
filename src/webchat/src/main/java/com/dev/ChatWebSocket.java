@@ -8,7 +8,10 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
  * This object represents a session (a socket connection)
  */
 public class ChatWebSocket extends WebSocketAdapter {
-	private String username = null; // unique name
+	private String username; // unique name
+	ChatWebSocket() {
+		this.username = null;
+	}
 
 	@Override
 	public void onWebSocketError(Throwable cause) {
