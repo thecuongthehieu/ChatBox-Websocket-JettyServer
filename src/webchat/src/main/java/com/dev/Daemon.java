@@ -18,12 +18,12 @@ public class Daemon {
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		context.addServlet(new ServletHolder(new ChatWebSocketServlet()), "/chat");
 
-		Class cl = Class.forName("com.dev.Daemon");
-		String resourceDirPath = cl.getResource("/webapp").toString();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		String webappResourceDirPath = classLoader.getResource("webapp").toString();
 
 		ResourceHandler resourceHandler = new ResourceHandler();
 		resourceHandler.setDirectoriesListed(true);
-		resourceHandler.setResourceBase(resourceDirPath);
+		resourceHandler.setResourceBase(webappResourceDirPath);
 
 		HandlerList handlerList = new HandlerList();
 		handlerList.setHandlers(new Handler[] {resourceHandler, context});

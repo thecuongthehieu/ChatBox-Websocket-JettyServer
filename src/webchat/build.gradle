@@ -2,8 +2,21 @@ plugins {
     id 'java'
 }
 
+// archiveBaseName and archiveVersion should be consistent with Docker image information
 group 'org.example'
 version '1.0'
+
+jar {
+    archiveBaseName = 'webchat'
+    archiveVersion =  "$version"
+    manifest {
+        attributes 'Main-Class' : 'com.dev.Daemon'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy "exclude"
+}
 
 repositories {
     mavenCentral()
@@ -60,16 +73,4 @@ task printSourceSetInformation() {
 
 test {
     useJUnitPlatform()
-}
-
-jar {
-    archiveBaseName = 'webchat'
-    archiveVersion =  "$version"
-    manifest {
-        attributes 'Main-Class' : 'com.dev.Daemon'
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    duplicatesStrategy "exclude"
 }
