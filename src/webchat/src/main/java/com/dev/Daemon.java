@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import io.prometheus.client.exporter.MetricsServlet;
+
 public class Daemon {
 	private static final Logger LOGGER = Logger.getLogger(Daemon.class);
 	private static final int SERVER_PORT = 6873;
@@ -23,13 +25,22 @@ public class Daemon {
 	public static void main(String[] args) throws Exception {
 		Server server = new Server(SERVER_PORT);
 
+		HandlerList handlerList = new HandlerList();
+
 		ContextHandler pingContextHandler = new ContextHandler();
 		pingContextHandler.setContextPath("/ping");
 		pingContextHandler.setHandler(new PingHandler());
+		handlerList.addHandler(pingContextHandler);
+
+		ContextHandler metricsContextHandler = new ContextHandler();
+		metricsContextHandler.setContextPath("/metrics");
+		metricsContextHandler.setHandler(new MetricsHandler());
+		handlerList.addHandler(metricsContextHandler);
 
 		ServletContextHandler sessionServletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		sessionServletContextHandler.setContextPath("/session");
 		sessionServletContextHandler.addServlet(new ServletHolder(new ChatWebSocketServlet()), "/chat");
+		handlerList.addHandler(sessionServletContextHandler);
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		String webappResourceDirPath = classLoader.getResource("webapp").toString();
@@ -40,9 +51,8 @@ public class Daemon {
 		ContextHandler chatboxContextHandler = new ContextHandler();
 		chatboxContextHandler.setContextPath("/chatbox");
 		chatboxContextHandler.setHandler(resourceHandler);
+		handlerList.addHandler(chatboxContextHandler);
 
-		HandlerList handlerList = new HandlerList();
-		handlerList.setHandlers(new Handler[] {pingContextHandler, sessionServletContextHandler, chatboxContextHandler});
 		server.setHandler(handlerList);
 
 		server.start();
@@ -54,7 +64,7 @@ public class Daemon {
 		LOGGER.fatal("Started Server");
 
 		server.join();
-//		server.stop();
+		// server.stop();
 	}
 
 	private static class PingHandler extends AbstractHandler {
@@ -66,6 +76,15 @@ public class Daemon {
 			response.setCharacterEncoding("UTF-8");
 			response.getOutputStream().write("pong".getBytes());
 			response.getOutputStream().close();
+		}
+	}
+
+	private static class MetricsHandler extends AbstractHandler {
+		@Override
+		public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+			MetricsServlet metricsServlet = new MetricsServlet();
+			metricsServlet.service(request, response);
+			// baseRequest.setHandled(true);
 		}
 	}
 }

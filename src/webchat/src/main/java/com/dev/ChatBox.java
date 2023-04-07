@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class ChatBox {
 	private final Map<String, ChatWebSocket> userNameToWebSocketMap;
+	private final ChatBoxMonitor chatBoxMonitor = ChatBoxMonitor.getInstance();
 
 	ChatBox() {
 		this.userNameToWebSocketMap = new HashMap<>();
@@ -22,6 +23,7 @@ public class ChatBox {
 		this.userNameToWebSocketMap.put(newUsername, newUserWebSocket);
 		Message addUserMessageObj = new Message(Message.ServerMessageAction.JOIN.value, newUsername, String.valueOf(this.getNumberOfClients()));
 		broadCastMessage(addUserMessageObj);
+		chatBoxMonitor.onAddUser();
 	}
 
 	public void removeUser(ChatWebSocket leftUserWebSocket) {
@@ -30,6 +32,7 @@ public class ChatBox {
 			userNameToWebSocketMap.remove(leftUserName);
 			Message removeUserMessageObj = new Message(Message.ServerMessageAction.LEFT.value, leftUserName, String.valueOf(this.getNumberOfClients()));
 			broadCastMessage(removeUserMessageObj);
+			chatBoxMonitor.onRemoveUser();
 		}
 	}
 
