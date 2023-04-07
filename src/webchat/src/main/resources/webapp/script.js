@@ -1,6 +1,6 @@
 'use strict';
 
-var URI = 'chat';
+var URI = '/session/chat';
 
 var buttonLogin = null,
     buttonSend = null,
@@ -77,7 +77,7 @@ function createURI(URI) {
     if (location.protocol === 'https:') {
         newURI = "wss://"
     }
-    return newURI + location.host + location.pathname + URI;
+    return newURI + location.host + URI;
 }
 
 function onOpen(e) {
