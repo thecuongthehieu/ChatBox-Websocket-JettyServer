@@ -2,15 +2,15 @@ package com.dev;
 
 import com.google.gson.Gson;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ChatBox {
-	private final Map<String, ChatWebSocket> userNameToWebSocketMap;
+	private final ConcurrentMap<String, ChatWebSocket> userNameToWebSocketMap;
 	private final ChatBoxMonitor chatBoxMonitor = ChatBoxMonitor.getInstance();
 
 	ChatBox() {
-		this.userNameToWebSocketMap = new HashMap<>();
+		this.userNameToWebSocketMap = new ConcurrentHashMap<>();
 	}
 
 	public void addUser(String newUsername, ChatWebSocket newUserWebSocket) {
