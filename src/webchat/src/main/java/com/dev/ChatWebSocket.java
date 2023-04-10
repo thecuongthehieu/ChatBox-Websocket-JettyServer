@@ -1,7 +1,6 @@
 package com.dev;
 
 import com.google.gson.Gson;
-
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 /**
@@ -9,6 +8,7 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
  */
 public class ChatWebSocket extends WebSocketAdapter {
 	private String username; // unique name
+
 	ChatWebSocket() {
 		this.username = null;
 	}
